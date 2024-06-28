@@ -1,10 +1,26 @@
 #include <stdio.h>
-struct avl{
-    int Info;
+#include <stdlib.h>
+#include <strings.h>
+
+struct movie{
+    char movie_id[10]
+    char movie_name[100]
+    int year;
+    char certificate[7]
+    char run_time[7]
+    char genre[100]
+    double rating;
+    char description[200]
+    char diretor [200];
+    char director_id[70]
+    char star[200]
+    char star_id[70];
+    double votes;
+    double gross; 
     int Altura;
-    struct avl *esq, *dir;
+    struct movie *esq, *dir;
 };
-typedef struct avl Avl;
+typedef struct movie Movie;
 
 int alturaAvl(Avl *a){
     if(a == NULL) return -1;
