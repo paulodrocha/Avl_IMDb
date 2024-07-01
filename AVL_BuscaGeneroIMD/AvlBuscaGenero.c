@@ -50,8 +50,9 @@ enum Genre {
 
 int converterChave(char movie_id[]) {
   char minusT[8];
-  for (int i = 0; i < 8; i++)
-    minusT[i] = movie_id[i + 2];
+  int i = 0;
+  for (; i < 8; i++){
+      minusT[i] = movie_id[i + 2];}
   return atoi(minusT);
 }
 
@@ -189,8 +190,9 @@ Avl *RetirarAvl(Avl *a, int chave) {
 void ImprimirAvl(Avl *a, int cont[]) {
   if (a == NULL)
     return;
-  for (int i = 0; i < 16; i++) {
-    for (int j = 0; j < cont[i]; j++)
+    int i = 0, j = 0;
+  for (; i < 16; i++) {
+    for (; j < cont[i]; j++)
       printf("%s %s %d %s %s %s %lf %s %s %s %s %s %lf %lf\n",
              MOVIES[i][i].movie_id, MOVIES[i][i].movie_name, MOVIES[i][i].year,
              MOVIES[i][i].certificate, MOVIES[i][i].run_time,
@@ -210,18 +212,18 @@ void ImprimirAvl2(Avl *a, int Nivel) {
   ImprimirAvl2(a->esq, Nivel + 1);
 }
 
-int *carregarDados() {
+int carregarDados() {
   int cont[16];
   FILE *fp;
   char linha[100000];
   char *p;
-  int campo;
-  for (int x = 0; x < 16; x++) {
+  int campo,x = 0;
+  for (; x < 16; x++) {
     cont[x] = 0;
     if(x == ACTION) {
       fp = fopen("IMDbData/action.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu action.CSV!\n");
+        printf("N�o abriu action.CSV!\n");
         exit(1);
       }
     }
@@ -229,7 +231,7 @@ int *carregarDados() {
     else if(x == ADVENTURE) {
       fp = fopen("IMDbData/adventure.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu adventure.CSV!\n");
+        printf("N�o abriu adventure.CSV!\n");
         exit(1);
       }
     }
@@ -237,7 +239,7 @@ int *carregarDados() {
 else if(x == ANIMATION) {
       fp = fopen("IMDbData/animation.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu animation.CSV!\n");
+        printf("N�o abriu animation.CSV!\n");
         exit(1);
       }
     }
@@ -245,7 +247,7 @@ else if(x == ANIMATION) {
 else if(x == BIOGRAPHY) {
       fp = fopen("IMDbData/biography.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu biography.CSV!\n");
+        printf("N�o abriu biography.CSV!\n");
         exit(1);
       }
     }
@@ -253,7 +255,7 @@ else if(x == BIOGRAPHY) {
 else if(x == CRIME) {
       fp = fopen("IMDbData/crime.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu crime.CSV!\n");
+        printf("N�o abriu crime.CSV!\n");
         exit(1);
       }
     }
@@ -261,7 +263,7 @@ else if(x == CRIME) {
 else if(x == FAMILY) {
       fp = fopen("IMDbData/family.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu family.CSV!\n");
+        printf("N�o abriu family.CSV!\n");
         exit(1);
       }
     }
@@ -269,7 +271,7 @@ else if(x == FAMILY) {
 else if(x == FANTASY) {
       fp = fopen("IMDbData/fantasy.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu fantasy.CSV!\n");
+        printf("N�o abriu fantasy.CSV!\n");
         exit(1);
       }
     }
@@ -277,7 +279,7 @@ else if(x == FANTASY) {
 else if(x == FILM_NOIR) {
       fp = fopen("IMDbData/film-noir.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu film-noir.CSV!\n");
+        printf("N�o abriu film-noir.CSV!\n");
         exit(1);
       }
     }
@@ -285,7 +287,7 @@ else if(x == FILM_NOIR) {
 else if(x == HISTORY) {
       fp = fopen("IMDbData/history.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu history.CSV!\n");
+        printf("N�o abriu history.CSV!\n");
         exit(1);
       }
     }
@@ -293,7 +295,7 @@ else if(x == HISTORY) {
 else if(x == HORROR) {
       fp = fopen("IMDbData/horror.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu horror.CSV!\n");
+        printf("N�o abriu horror.CSV!\n");
         exit(1);
       }
     }
@@ -302,7 +304,7 @@ else if(x == HORROR) {
     else if(x == MYSTERY) {
       fp = fopen("IMDbData/mystery.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu mystery.CSV!\n");
+        printf("N�o abriu mystery.CSV!\n");
         exit(1);
       }
     }
@@ -310,7 +312,7 @@ else if(x == HORROR) {
     else if(x == ROMANCE) {
       fp = fopen("IMDbData/romance.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu romance.CSV!\n");
+        printf("N�o abriu romance.CSV!\n");
         exit(1);
       }
     }
@@ -318,7 +320,7 @@ else if(x == HORROR) {
     else if(x == SCIFI) {
       fp = fopen("IMDbData/scifi.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu scifi.CSV!\n");
+        printf("N�o abriu scifi.CSV!\n");
         exit(1);
       }
     }
@@ -326,7 +328,7 @@ else if(x == HORROR) {
     else if(x == SPORTS) {
       fp = fopen("IMDbData/sports.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu sports.CSV!\n");
+        printf("N�o abriu sports.CSV!\n");
         exit(1);
       }
     }
@@ -334,7 +336,7 @@ else if(x == HORROR) {
     else if(x == THRILLER) {
       fp = fopen("IMDbData/thriller.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu thriller.CSV!\n");
+        printf("N�o abriu thriller.CSV!\n");
         exit(1);
       }
     }
@@ -342,7 +344,7 @@ else if(x == HORROR) {
     else if(x == WAR) {
       fp = fopen("IMDbData/war.CSV", "r");
       if (fp == NULL) {
-        printf("Não abriu war.CSV!\n");
+        printf("N�o abriu war.CSV!\n");
         exit(1);
       }
     }
@@ -396,14 +398,15 @@ else if(x == HORROR) {
     fclose(fp);
   }
 
-  return &(cont[0]);
+  return cont[0];
 }
 
 int main() {
   Avl *a = NULL;
-  int *cont;
-  cont = carregarDados();
-  for (int i = 0; i < cont[0]; i++) {
+  int cont[16];
+  cont[0] = carregarDados();
+  int i = 0;
+  for (; i < cont[0]; i++) {
     printf("%s %s %d %s %s %s %lf %s %s %s %s %s %lf %lf\n",
            MOVIES[0][i].movie_id, MOVIES[0][i].movie_name, MOVIES[0][i].year,
            MOVIES[0][i].certificate, MOVIES[0][i].run_time, MOVIES[0][i].genre,
