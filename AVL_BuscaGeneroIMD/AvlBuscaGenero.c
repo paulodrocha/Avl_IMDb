@@ -21,13 +21,6 @@ struct movie {
 typedef struct movie Movies;
 Movies MOVIES[16][60000];
 
-struct avl {
-  Movies *Movie;
-  int chave;
-  int Altura;
-  struct avl *esq, *dir;
-};
-typedef struct avl Avl;
 
 enum Genre {
   ACTION,
@@ -48,172 +41,172 @@ enum Genre {
   WAR
 };
 
-int converterChave(char movie_id[]) {
+int converterChave(char movie_id[], int x) {
   char minusT[8];
   int i = 0;
   for (; i < 8; i++){
       minusT[i] = movie_id[i + 2];}
-  return atoi(minusT);
+  return atoi(minusT) + (x * 100000000);
 }
 
-int alturaAvl(Avl *a) {
-  if (a == NULL)
-    return -1;
-  else
-    return a->Altura;
+struct avl{
+    Movies *Movie;
+    int chave;
+    int Altura;
+    struct avl *esq, *dir;
+};
+typedef struct avl Avl;
+
+int alturaAvl(Avl *a){
+    if(a == NULL) return -1;
+    else return a->Altura;
 }
 
-int maior(int x, int y) {
-  if (x > y)
-    return x;
-  else
-    return y;
+int maior(int x, int y){
+    if(x > y) return x;
+    else return y;
 }
 
-int FatorBalanceAvl(Avl *a) {
-  return abs(alturaAvl(a->esq) - alturaAvl(a->dir));
+int FatorBalanceAvl(Avl * a){
+    return abs(alturaAvl(a->esq) - alturaAvl(a->dir));
 }
 
-Avl *RotacaoLL(Avl *a) {
-  Avl *no;
-  no = a->esq;
-  a->esq = no->dir;
-  no->dir = a;
-  a->Altura = maior(alturaAvl(a->esq), alturaAvl(a->dir)) + 1;
-  no->Altura = maior(alturaAvl(no->esq), a->Altura) + 1;
-  return no;
+Avl* RotacaoLL(Avl *a){
+    Avl *no;
+    no = a->esq;
+    a->esq = no->dir;
+    no->dir = a;
+    a->Altura = maior(alturaAvl(a->esq),
+                            alturaAvl(a->dir))
+                            + 1;
+    no->Altura = maior(alturaAvl(no->esq),
+                       a->Altura) + 1;
+    return no;
 }
 
-Avl *RotacaoRR(Avl *a) {
-  Avl *no;
-  no = a->dir;
-  a->dir = no->esq;
-  no->esq = a;
-  a->Altura = maior(alturaAvl(a->esq), alturaAvl(a->dir)) + 1;
-  no->Altura = maior(alturaAvl(no->dir), a->Altura) + 1;
-  return no;
+Avl * RotacaoRR(Avl *a){
+    Avl *no;
+    no = a->dir;
+    a->dir = no->esq;
+    no->esq = a;
+    a->Altura = maior(alturaAvl(a->esq),
+                            alturaAvl(a->dir))
+                            + 1;
+    no->Altura = maior(alturaAvl(no->dir),
+                       a->Altura) + 1;
+    return no;
 }
 
-Avl *RotacaoLR(Avl *a) {
-  a->esq = RotacaoRR(a->esq);
-  a = RotacaoLL(a);
-  return a;
+Avl * RotacaoLR(Avl *a){
+    a->esq = RotacaoRR(a->esq);
+    a = RotacaoLL(a);
+    return a;
 }
 
-Avl *RotacaoRL(Avl *a) {
-  a->dir = RotacaoLL(a->dir);
-  a = RotacaoRR(a);
-  return a;
+Avl * RotacaoRL(Avl *a){
+    a->dir = RotacaoLL(a->dir);
+    a = RotacaoRR(a);
+    return a;
 }
 
-Avl *InserirAvl(Avl *a, int chave, Movies *movie) {
-
-    printf("Chave: %d\n", chave);
-
-  if (a == NULL) {
-    Avl *Novo = (Avl *)malloc(sizeof(Avl));
-    Novo->Movie = movie;
-    Novo->chave = chave;
-    Novo->Altura = 0;
-    Novo->esq = Novo->dir = NULL;
-    return Novo;
-
-  }
-  Avl *Atual = a;
-  if (chave < a->chave) {
-    a->esq = InserirAvl(a->esq, chave, movie);
-    if (FatorBalanceAvl(a) > 1) {
-      if (chave < a->chave)
-        a = RotacaoLL(a);
-      else
-        a = RotacaoLR(a);
+Avl * InserirAvl(Avl* a, int chave, Movies *movie){
+    if(a == NULL){
+        Avl* Novo = (Avl*) malloc(sizeof(Avl));
+        Novo->Movie = movie;
+        Novo->Altura = 0;
+        Novo->esq = Novo->dir = NULL;
+        return Novo;
     }
-  } else if (chave > a->chave) {
-    a->dir = InserirAvl(a->dir, chave, movie);
-    if (FatorBalanceAvl(a) > 1) {
-      if (chave > a->dir->chave)
-        a = RotacaoRR(a);
-      else
-        a = RotacaoRL(a);
+    Avl* Atual = a;
+    if(chave < a->chave){
+        a->esq = InserirAvl(a->esq, chave, movie);
+        if(FatorBalanceAvl(a) > 1){
+            if(chave < a->esq->chave)
+                a = RotacaoLL(a);
+            else a = RotacaoLR(a);
+        }
     }
-  } else {
-    printf("Valor duplicado!!\n");
-    exit(1);
-  }
-  Atual->Altura = maior(alturaAvl(Atual->esq), alturaAvl(Atual->dir)) + 1;
-  return a;
+    else
+    if(chave > a->chave){
+        a->dir = InserirAvl(a->dir, chave, movie);
+        if(FatorBalanceAvl(a) > 1){
+            if(chave > a->dir->chave)
+                a = RotacaoRR(a);
+            else a = RotacaoRL(a);
+        }
+    }
+    else{
+        printf("Valor duplicado!!\n");
+        exit(1);
+    }
+    Atual->Altura = maior(alturaAvl(Atual->esq), alturaAvl(Atual->dir)) + 1;
+    return a;
 }
 
-Avl *RetirarAvl(Avl *a, int chave) {
-  if (a == NULL) {
-    return NULL;
-  }
-  Avl *Atual = a;
-  if (chave < a->chave) {
-    a->esq = RetirarAvl(a->esq, chave);
-    if (FatorBalanceAvl(a) > 1) {
-      if (alturaAvl(a->dir->dir) < alturaAvl(a->dir->esq))
-        a = RotacaoRL(a);
-      else
-        a = RotacaoRR(a);
+Avl * RetirarAvl(Avl* a, int chave){
+    if(a == NULL){
+        return NULL;
     }
-  } else if (chave > a->chave) {
-    a->dir = RetirarAvl(a->dir, chave);
-    if (FatorBalanceAvl(a) > 1) {
-      if (alturaAvl(a->esq->esq) < alturaAvl(a->esq->dir))
-        a = RotacaoLR(a);
-      else
-        a = RotacaoLL(a);
+    Avl* Atual = a;
+    if(chave < a->chave){
+        a->esq = RetirarAvl(a->esq, chave);
+        if(FatorBalanceAvl(a) > 1){
+            if(alturaAvl(a->dir->dir) < alturaAvl(a->dir->esq))
+                a = RotacaoRL(a);
+            else a = RotacaoRR(a);
+        }
     }
-  } else {
-    if (a->esq == NULL && a->dir == NULL) {
-      free(a);
-      a = NULL;
-      return a;
-    } else if (a->esq == NULL) { // Tem apenas a direita
-      Avl *t = a;
-      a = a->dir;
-      free(t);
-    } else if (a->dir == NULL) { // Tem apenas a esquerda
-      Avl *t = a;
-      a = a->esq;
-      free(t);
-    } else { // Tem os dois
-      Avl *t = a->esq;
-      while (t->dir != NULL) {
-        t = t->dir;
-      }
-      a->chave = t->chave;
-      t->chave = chave;
-      a->esq = RetirarAvl(a->esq, chave);
+    else
+    if(chave > a->chave){
+        a->dir = RetirarAvl(a->dir, chave);
+        if(FatorBalanceAvl(a) > 1){
+            if(alturaAvl(a->esq->esq) < alturaAvl(a->esq->dir))
+                a = RotacaoLR(a);
+            else a = RotacaoLL(a);
+        }
     }
-  }
-  Atual->Altura = maior(alturaAvl(Atual->esq), alturaAvl(Atual->dir)) + 1;
-  return a;
+    else{
+        if(a->esq == NULL && a->dir == NULL){
+            free(a);
+            a = NULL;
+            return a;
+        }
+        else if(a->esq == NULL){ // Tem apenas a direita
+            Avl *t = a;
+            a = a->dir;
+            free(t);
+        }
+        else if(a->dir == NULL){ // Tem apenas a esquerda
+            Avl *t = a;
+            a = a->esq;
+            free(t);
+        }
+        else{ // Tem os dois
+            Avl *t = a->esq;
+            while(t->dir != NULL){
+                t = t->dir;
+            }
+            a->chave = t->chave;
+            t->chave = chave;
+            a->esq = RetirarAvl(a->esq, chave);
+        }
+    }
+    Atual->Altura = maior(alturaAvl(Atual->esq), alturaAvl(Atual->dir)) + 1;
+    return a;
 }
 
-void ImprimirAvl(Avl *a, int cont[]) {
-  if (a == NULL) return;
-    int i = 0, j = 0;
-  for (; i < 16; i++) {
-    for (; j < cont[i]; j++)
-      printf("%s\n%s\n%d\n%s\n%s\n%s\n%lf\n%s\n%s\n%s\n%s\n%s\n%lf\n%lf\n",
-             MOVIES[i][j].movie_id, MOVIES[i][j].movie_name, MOVIES[i][j].year,
-             MOVIES[i][j].certificate, MOVIES[i][j].run_time,
-             MOVIES[i][j].genre, MOVIES[i][j].rating, MOVIES[i][i].description,
-             MOVIES[i][j].diretor, MOVIES[i][j].director_id, MOVIES[i][j].star,
-             MOVIES[i][j].star_id, MOVIES[i][j].votes, MOVIES[i][j].gross);
-  }
-  ImprimirAvl(a->esq, cont);
-  ImprimirAvl(a->dir, cont);
+void ImprimirAvl(Avl *a){
+    if(a == NULL) return;
+    printf("%d  Altura %d\n", a->chave, a->Altura);
+    ImprimirAvl(a->esq);
+    ImprimirAvl(a->dir);
 }
 
-void ImprimirAvl2(Avl *a, int Nivel) {
-  if (a == NULL)
-    return;
-  ImprimirAvl2(a->dir, Nivel + 1);
-  printf("%*s\n", Nivel * 5, a->Movie->director_id);
-  ImprimirAvl2(a->esq, Nivel + 1);
+void ImprimirAvl2(Avl *a, int Nivel){
+    if(a == NULL) return;
+    ImprimirAvl2(a->dir, Nivel+1);
+    printf("%*d\n", Nivel*5, a->chave);
+    ImprimirAvl2(a->esq, Nivel+1);
 }
 
 int carregarDados(int x) {
@@ -397,27 +390,43 @@ else if(x == HORROR) {
 
       cont++;
     }
-    printf("%d %d\n", x,  cont);
     fclose(fp);
   return cont;
 }
 
-int main() {
-  Avl *a = NULL;
-  int cont[14];
-  int c = 0, d = 0;
-  for(int i = 0; i < 14; i++) cont[i] = carregarDados(i);
-  for (int j = 0; j < 16; j++) {
-        for(int k = 0; k < cont[c]; k++) {
-            d = converterChave(MOVIES[j][k].movie_id);
-        if(d != 0)
-            a = InserirAvl(a, d, &MOVIES[j][k]);
-        }
-        c++;
-        if(c == 14) break;
-  }
-  ImprimirAvl(a, cont);
-  printf("\n\n\n");
+int main(){
+    Avl *a = NULL;
+    int cont[16], d = 0;
+    for(int x = 0; x < 2; x++) cont[x] = carregarDados(x);
 
-  return 0;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < cont[i]; j++) {
+            d = converterChave(MOVIES[i][j].movie_id, i);
+            if(d != 0)
+                a = InserirAvl(a, d, &MOVIES[i][j]);
+
+              /*  printf("%s\n%s\n%d\n%s\n%s\n%s\n%lf\n%s\n%s\n%s\n%s\n%s\n%lf\n%lf\n\n",
+            MOVIES[i][j].movie_id, MOVIES[i][j].movie_name, MOVIES[i][j].year,
+            MOVIES[i][j].certificate, MOVIES[i][j].run_time,
+            MOVIES[i][j].genre, MOVIES[i][j].rating, MOVIES[i][j].description,
+            MOVIES[i][j].diretor, MOVIES[i][j].director_id, MOVIES[i][j].star,
+            MOVIES[i][j].star_id, MOVIES[i][j].votes, MOVIES[i][j].gross); */
+        }
+    }
+
+    printf("%d", alturaAvl(a));
+
+
+  /*  ImprimirAvl(a);
+    printf("\n\n\n");
+
+    printf("\n\n\n");
+    a = RetirarAvl(a, 55);
+    //a = RetirarAvl(a, 50);
+
+    ImprimirAvl(a);
+    printf("\n\n\n");
+    ImprimirAvl2(a,0); */
+
+    return 0;
 }
