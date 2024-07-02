@@ -42,11 +42,15 @@ enum Genre {
 };
 
 int converterChave(char movie_id[], int x) {
+    //printf("MOVIE_ID: %s\n", movie_id);
   char minusT[8];
-  int i = 0;
+  int i = 0, d = 0;
   for (; i < 8; i++){
-      minusT[i] = movie_id[i + 2];}
-  return atoi(minusT) + (x * 100000000);
+      minusT[i] = movie_id[i + 2];
+    }
+      d = (atoi(minusT) * 100) + x;
+      //printf("Chave: %d\n", d);
+  return d;
 }
 
 struct avl{
@@ -195,11 +199,17 @@ Avl * RetirarAvl(Avl* a, int chave){
     return a;
 }
 
-void ImprimirAvl(Avl *a){
+void ImprimirAvl(Avl *a, int i){
     if(a == NULL) return;
-    printf("%d  Altura %d\n", a->chave, a->Altura);
-    ImprimirAvl(a->esq);
-    ImprimirAvl(a->dir);
+    if(a->chave / 100000000 == i)
+    printf("%s\n%s\n%d\n%s\n%s\n%s\n%lf\n%s\n%s\n%s\n%s\n%s\n%lf\n%lf\n\n---------  Chave: %d  --------------\n",
+            a->Movie->movie_id, a->Movie->movie_name, a->Movie->year,
+            a->Movie->certificate, a->Movie->run_time,
+            a->Movie->genre, a->Movie->rating, a->Movie->description,
+            a->Movie->diretor, a->Movie->director_id, a->Movie->star,
+            a->Movie->star_id, a->Movie->votes, a->Movie->gross, a->chave);
+    ImprimirAvl(a->esq, i);
+    ImprimirAvl(a->dir, i);
 }
 
 void ImprimirAvl2(Avl *a, int Nivel){
@@ -211,8 +221,7 @@ void ImprimirAvl2(Avl *a, int Nivel){
 
 int carregarDados(int x) {
   FILE *fp;
-  char linha[100000];
-  char *p;
+  char linha[10000], *p, texto[10000];
   int campo;
   int cont = 0;
     if(x == ACTION) {
@@ -351,41 +360,49 @@ else if(x == HORROR) {
 
       // printf("%s\n", linha);
 
-      p = strtok(linha, ";");
+      p = strtok(linha, ",");
       campo = 0;
 
       while (p != NULL) {
-        // printf("%s\n", p);
+          strcpy(texto, p);
+            if(texto[0] == '\"' || texto[0] == '\t'){ // Se tem uma aspas
+                strcpy(texto, p+1); // Tira a aspas
+                p = strtok(NULL, "\""); // Localiza a aspas de finalização
+                strcat(texto, ","); // Coloca a vírgula
+                if(p != NULL) strcat(texto, p); // Cópia o restante até antes da próxima aspas
+            }
+      //   printf("%s\n", p);
+      //   sleep(1);
         if (campo == 0)
-          strcpy(MOVIES[x][cont].movie_id, p);
+          strcpy(MOVIES[x][cont].movie_id, texto);
         if (campo == 1)
-          strcpy(MOVIES[x][cont].movie_name, p);
+          strcpy(MOVIES[x][cont].movie_name, texto);
         if (campo == 2)
-          MOVIES[x][cont].year = atoi(p);
+          MOVIES[x][cont].year = atoi(texto);
         if (campo == 3)
-          strcpy(MOVIES[x][cont].certificate, p);
+          strcpy(MOVIES[x][cont].certificate, texto);
         if (campo == 4)
-          strcpy(MOVIES[x][cont].run_time, p);
+          strcpy(MOVIES[x][cont].run_time, texto);
         if (campo == 5)
-          strcpy(MOVIES[x][cont].genre, p);
+          strcpy(MOVIES[x][cont].genre, texto);
         if (campo == 6)
-          MOVIES[x][cont].rating = atof(p);
+          MOVIES[x][cont].rating = atof(texto);
         if (campo == 7)
-          strcpy(MOVIES[x][cont].description, p);
+          strcpy(MOVIES[x][cont].description, texto);
         if (campo == 8)
-          strcpy(MOVIES[x][cont].diretor, p);
+          strcpy(MOVIES[x][cont].diretor, texto);
         if (campo == 9)
-          strcpy(MOVIES[x][cont].director_id, p);
+          strcpy(MOVIES[x][cont].director_id, texto);
         if (campo == 10)
-          strcpy(MOVIES[x][cont].star, p);
+          strcpy(MOVIES[x][cont].star, texto);
         if (campo == 11)
-          strcpy(MOVIES[x][cont].star_id, p);
+          strcpy(MOVIES[x][cont].star_id, texto);
         if (campo == 12)
-          MOVIES[x][cont].votes = atof(p);
+          MOVIES[x][cont].votes = atof(texto);
         if (campo == 13)
-          MOVIES[x][cont].gross = atof(p);
+          MOVIES[x][cont].gross = atof(texto);
         campo++;
-        p = strtok(NULL, ";");
+        p = strtok(NULL, ",");
       }
 
       cont++;
@@ -397,28 +414,25 @@ else if(x == HORROR) {
 int main(){
     Avl *a = NULL;
     int cont[16], d = 0;
-    for(int x = 0; x < 2; x++) cont[x] = carregarDados(x);
+    int i = 3;
+    cont[i] = carregarDados(i);
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < cont[i]; j++) {
+        for (int j = 0; j < 5; j++) {
             d = converterChave(MOVIES[i][j].movie_id, i);
             if(d != 0)
                 a = InserirAvl(a, d, &MOVIES[i][j]);
 
-              /*  printf("%s\n%s\n%d\n%s\n%s\n%s\n%lf\n%s\n%s\n%s\n%s\n%s\n%lf\n%lf\n\n",
+                printf("\nmovie_id: %s\nmovie_name: %s\nyear: %d\ncertificate: %s\nrun_time: %s\ngenre: %s\nrating: %lf\ndescription: %s\ndiretor: %s\ndirector_id: %s\nstar: %s\nstar_id: %s\nvotes: %lf\ngross: %lf\n\n",
             MOVIES[i][j].movie_id, MOVIES[i][j].movie_name, MOVIES[i][j].year,
             MOVIES[i][j].certificate, MOVIES[i][j].run_time,
             MOVIES[i][j].genre, MOVIES[i][j].rating, MOVIES[i][j].description,
             MOVIES[i][j].diretor, MOVIES[i][j].director_id, MOVIES[i][j].star,
-            MOVIES[i][j].star_id, MOVIES[i][j].votes, MOVIES[i][j].gross); */
+            MOVIES[i][j].star_id, MOVIES[i][j].votes, MOVIES[i][j].gross);
+            sleep(5);
         }
-    }
 
-    printf("%d", alturaAvl(a));
-
-
-  /*  ImprimirAvl(a);
-    printf("\n\n\n");
+    //ImprimirAvl(a, 0);
+    /* printf("\n\n\n");
 
     printf("\n\n\n");
     a = RetirarAvl(a, 55);
