@@ -107,12 +107,17 @@ Avl *RotacaoRL(Avl *a) {
 }
 
 Avl *InserirAvl(Avl *a, int chave, Movies *movie) {
+
+    printf("Chave: %d\n", chave);
+
   if (a == NULL) {
     Avl *Novo = (Avl *)malloc(sizeof(Avl));
     Novo->Movie = movie;
+    Novo->chave = chave;
     Novo->Altura = 0;
     Novo->esq = Novo->dir = NULL;
     return Novo;
+
   }
   Avl *Atual = a;
   if (chave < a->chave) {
@@ -188,17 +193,16 @@ Avl *RetirarAvl(Avl *a, int chave) {
 }
 
 void ImprimirAvl(Avl *a, int cont[]) {
-  if (a == NULL)
-    return;
+  if (a == NULL) return;
     int i = 0, j = 0;
   for (; i < 16; i++) {
     for (; j < cont[i]; j++)
-      printf("%s %s %d %s %s %s %lf %s %s %s %s %s %lf %lf\n",
-             MOVIES[i][i].movie_id, MOVIES[i][i].movie_name, MOVIES[i][i].year,
-             MOVIES[i][i].certificate, MOVIES[i][i].run_time,
-             MOVIES[i][i].genre, MOVIES[i][i].rating, MOVIES[i][i].description,
-             MOVIES[i][i].diretor, MOVIES[i][i].director_id, MOVIES[i][i].star,
-             MOVIES[i][i].star_id, MOVIES[i][i].votes, MOVIES[i][i].gross);
+      printf("%s\n%s\n%d\n%s\n%s\n%s\n%lf\n%s\n%s\n%s\n%s\n%s\n%lf\n%lf\n",
+             MOVIES[i][j].movie_id, MOVIES[i][j].movie_name, MOVIES[i][j].year,
+             MOVIES[i][j].certificate, MOVIES[i][j].run_time,
+             MOVIES[i][j].genre, MOVIES[i][j].rating, MOVIES[i][i].description,
+             MOVIES[i][j].diretor, MOVIES[i][j].director_id, MOVIES[i][j].star,
+             MOVIES[i][j].star_id, MOVIES[i][j].votes, MOVIES[i][j].gross);
   }
   ImprimirAvl(a->esq, cont);
   ImprimirAvl(a->dir, cont);
@@ -212,26 +216,24 @@ void ImprimirAvl2(Avl *a, int Nivel) {
   ImprimirAvl2(a->esq, Nivel + 1);
 }
 
-int carregarDados() {
-  int cont[16];
+int carregarDados(int x) {
   FILE *fp;
   char linha[100000];
   char *p;
-  int campo,x = 0;
-  for (; x < 16; x++) {
-    cont[x] = 0;
+  int campo;
+  int cont = 0;
     if(x == ACTION) {
       fp = fopen("IMDbData/action.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu action.CSV!\n");
+        printf("Nao abriu action.CSV!\n");
         exit(1);
       }
     }
-    
+
     else if(x == ADVENTURE) {
       fp = fopen("IMDbData/adventure.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu adventure.CSV!\n");
+        printf("Nao abriu adventure.CSV!\n");
         exit(1);
       }
     }
@@ -239,7 +241,7 @@ int carregarDados() {
 else if(x == ANIMATION) {
       fp = fopen("IMDbData/animation.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu animation.CSV!\n");
+        printf("Nao abriu animation.CSV!\n");
         exit(1);
       }
     }
@@ -247,7 +249,7 @@ else if(x == ANIMATION) {
 else if(x == BIOGRAPHY) {
       fp = fopen("IMDbData/biography.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu biography.CSV!\n");
+        printf("Nao abriu biography.CSV!\n");
         exit(1);
       }
     }
@@ -255,7 +257,7 @@ else if(x == BIOGRAPHY) {
 else if(x == CRIME) {
       fp = fopen("IMDbData/crime.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu crime.CSV!\n");
+        printf("Nao abriu crime.CSV!\n");
         exit(1);
       }
     }
@@ -263,7 +265,7 @@ else if(x == CRIME) {
 else if(x == FAMILY) {
       fp = fopen("IMDbData/family.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu family.CSV!\n");
+        printf("Nao abriu family.CSV!\n");
         exit(1);
       }
     }
@@ -271,7 +273,7 @@ else if(x == FAMILY) {
 else if(x == FANTASY) {
       fp = fopen("IMDbData/fantasy.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu fantasy.CSV!\n");
+        printf("Nao abriu fantasy.CSV!\n");
         exit(1);
       }
     }
@@ -279,7 +281,7 @@ else if(x == FANTASY) {
 else if(x == FILM_NOIR) {
       fp = fopen("IMDbData/film-noir.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu film-noir.CSV!\n");
+        printf("Nao abriu film-noir.CSV!\n");
         exit(1);
       }
     }
@@ -287,7 +289,7 @@ else if(x == FILM_NOIR) {
 else if(x == HISTORY) {
       fp = fopen("IMDbData/history.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu history.CSV!\n");
+        printf("Nao abriu history.CSV!\n");
         exit(1);
       }
     }
@@ -295,7 +297,7 @@ else if(x == HISTORY) {
 else if(x == HORROR) {
       fp = fopen("IMDbData/horror.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu horror.CSV!\n");
+        printf("Nao abriu horror.CSV!\n");
         exit(1);
       }
     }
@@ -304,7 +306,7 @@ else if(x == HORROR) {
     else if(x == MYSTERY) {
       fp = fopen("IMDbData/mystery.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu mystery.CSV!\n");
+        printf("Nao abriu mystery.CSV!\n");
         exit(1);
       }
     }
@@ -312,7 +314,7 @@ else if(x == HORROR) {
     else if(x == ROMANCE) {
       fp = fopen("IMDbData/romance.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu romance.CSV!\n");
+        printf("Nao abriu romance.CSV!\n");
         exit(1);
       }
     }
@@ -320,7 +322,7 @@ else if(x == HORROR) {
     else if(x == SCIFI) {
       fp = fopen("IMDbData/scifi.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu scifi.CSV!\n");
+        printf("Nao abriu scifi.CSV!\n");
         exit(1);
       }
     }
@@ -328,7 +330,7 @@ else if(x == HORROR) {
     else if(x == SPORTS) {
       fp = fopen("IMDbData/sports.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu sports.CSV!\n");
+        printf("Nao abriu sports.CSV!\n");
         exit(1);
       }
     }
@@ -336,7 +338,7 @@ else if(x == HORROR) {
     else if(x == THRILLER) {
       fp = fopen("IMDbData/thriller.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu thriller.CSV!\n");
+        printf("Nao abriu thriller.CSV!\n");
         exit(1);
       }
     }
@@ -344,7 +346,7 @@ else if(x == HORROR) {
     else if(x == WAR) {
       fp = fopen("IMDbData/war.CSV", "r");
       if (fp == NULL) {
-        printf("N�o abriu war.CSV!\n");
+        printf("Nao abriu war.CSV!\n");
         exit(1);
       }
     }
@@ -362,61 +364,58 @@ else if(x == HORROR) {
       while (p != NULL) {
         // printf("%s\n", p);
         if (campo == 0)
-          strcpy(MOVIES[x][cont[x]].movie_id, p);
+          strcpy(MOVIES[x][cont].movie_id, p);
         if (campo == 1)
-          strcpy(MOVIES[x][cont[x]].movie_name, p);
+          strcpy(MOVIES[x][cont].movie_name, p);
         if (campo == 2)
-          MOVIES[x][cont[x]].year = atoi(p);
+          MOVIES[x][cont].year = atoi(p);
         if (campo == 3)
-          strcpy(MOVIES[x][cont[x]].certificate, p);
+          strcpy(MOVIES[x][cont].certificate, p);
         if (campo == 4)
-          strcpy(MOVIES[x][cont[x]].run_time, p);
+          strcpy(MOVIES[x][cont].run_time, p);
         if (campo == 5)
-          strcpy(MOVIES[x][cont[x]].genre, p);
+          strcpy(MOVIES[x][cont].genre, p);
         if (campo == 6)
-          MOVIES[x][cont[x]].rating = atof(p);
+          MOVIES[x][cont].rating = atof(p);
         if (campo == 7)
-          strcpy(MOVIES[x][cont[x]].description, p);
+          strcpy(MOVIES[x][cont].description, p);
         if (campo == 8)
-          strcpy(MOVIES[x][cont[x]].diretor, p);
+          strcpy(MOVIES[x][cont].diretor, p);
         if (campo == 9)
-          strcpy(MOVIES[x][cont[x]].director_id, p);
+          strcpy(MOVIES[x][cont].director_id, p);
         if (campo == 10)
-          strcpy(MOVIES[x][cont[x]].star, p);
+          strcpy(MOVIES[x][cont].star, p);
         if (campo == 11)
-          strcpy(MOVIES[x][cont[x]].star_id, p);
+          strcpy(MOVIES[x][cont].star_id, p);
         if (campo == 12)
-          MOVIES[x][cont[x]].votes = atof(p);
+          MOVIES[x][cont].votes = atof(p);
         if (campo == 13)
-          MOVIES[x][cont[x]].gross = atof(p);
+          MOVIES[x][cont].gross = atof(p);
         campo++;
         p = strtok(NULL, ";");
       }
 
-      cont[x]++;
+      cont++;
     }
+    printf("%d %d\n", x,  cont);
     fclose(fp);
-  }
-
-  return cont[0];
+  return cont;
 }
 
 int main() {
   Avl *a = NULL;
-  int cont[16];
-  cont[0] = carregarDados();
-  int i = 0;
-  for (; i < cont[0]; i++) {
-    printf("%s %s %d %s %s %s %lf %s %s %s %s %s %lf %lf\n",
-           MOVIES[0][i].movie_id, MOVIES[0][i].movie_name, MOVIES[0][i].year,
-           MOVIES[0][i].certificate, MOVIES[0][i].run_time, MOVIES[0][i].genre,
-           MOVIES[0][i].rating, MOVIES[0][i].description, MOVIES[0][i].diretor,
-           MOVIES[0][i].director_id, MOVIES[0][i].star, MOVIES[0][i].star_id,
-           MOVIES[0][i].votes, MOVIES[0][i].gross);
-
-    InserirAvl(a, converterChave(MOVIES[0][i].movie_id), &MOVIES[0][i]);
+  int cont[14];
+  int c = 0, d = 0;
+  for(int i = 0; i < 14; i++) cont[i] = carregarDados(i);
+  for (int j = 0; j < 16; j++) {
+        for(int k = 0; k < cont[c]; k++) {
+            d = converterChave(MOVIES[j][k].movie_id);
+        if(d != 0)
+            a = InserirAvl(a, d, &MOVIES[j][k]);
+        }
+        c++;
+        if(c == 14) break;
   }
-
   ImprimirAvl(a, cont);
   printf("\n\n\n");
 
